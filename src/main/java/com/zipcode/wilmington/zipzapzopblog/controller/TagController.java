@@ -44,10 +44,8 @@ public class TagController {
 
     @PutMapping("/tags/{id}")
     public ResponseEntity<Tag> updateTag(@PathVariable Long id, @RequestBody Tag tag){
-        return null;
+        return new ResponseEntity<>(tagService.update(tag), HttpStatus.OK);
     }
-
-
 
     @DeleteMapping("/tags/{id}")
     public ResponseEntity<Boolean> deleteTag(@PathVariable Long id){

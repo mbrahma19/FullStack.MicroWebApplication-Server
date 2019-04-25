@@ -3,6 +3,8 @@ package com.zipcode.wilmington.zipzapzopblog.controller;
 import com.zipcode.wilmington.zipzapzopblog.model.User;
 import com.zipcode.wilmington.zipzapzopblog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +26,7 @@ public class RegistrationController {
 
 
     @PostMapping("/registration")
-    public String createNewUser(@RequestBody User user,
+    public ResponseEntity<User> createNewUser(@RequestBody User user,
                                 BindingResult bindingResult) {
 
         if (service.findByEmail(user.getEmail()).isPresent()) {
@@ -40,10 +42,11 @@ public class RegistrationController {
 
         if (!bindingResult.hasErrors()) {
             // Registration successful, save user
-            // Set user role to USER and set it as active
             service.save(user);
+            return new ResponseEntity<>(user, HttpStatus.CREATED);
+        }else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-        return "/registration";
     }
 
 }

@@ -20,8 +20,10 @@ public class PostController {
     public PostController(PostService service){
         this.service = service;
     }
+
     @GetMapping(value = "/posts")
-    public ResponseEntity<List<Post>> index(){ return new ResponseEntity<>(service.findAllOrderByDate(), HttpStatus.OK);}
+    public ResponseEntity<List<Post>> index(){
+        return new ResponseEntity<>(service.findAllOrderByDate(), HttpStatus.OK);}
 
     @GetMapping(value = "/posts/{id}")
     public ResponseEntity<Post> show(@PathVariable Long id){
@@ -33,15 +35,13 @@ public class PostController {
         return new ResponseEntity<>(service.create(post), HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/posts/update")
-    public ResponseEntity<Post>update(@PathVariable Long id,@RequestBody Post post){
+    @PutMapping(value = "/posts")
+    public ResponseEntity<Post>update(@RequestBody Post post){
         return new ResponseEntity<>(service.update(post), HttpStatus.OK);
     }
-    @DeleteMapping(value = "/posts/delete")
+    @DeleteMapping(value = "/posts/{id}")
     public ResponseEntity<Boolean>destroy(@PathVariable Long id){
            return new ResponseEntity<>(service.delete(id), HttpStatus.OK);}
-
-
 
 
 }

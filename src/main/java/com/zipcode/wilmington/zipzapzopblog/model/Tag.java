@@ -9,14 +9,14 @@ import java.util.Collection;
 public class Tag {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tag_id", unique = false, nullable = false)
     private Long id;
 
     @Column(name = "key_word",unique = false, nullable = false)
     private String keyWord;
 
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "tags")
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "tags")
     private Collection<Post> posts;
 
     public Tag(){
@@ -24,11 +24,6 @@ public class Tag {
     }
 
     public Tag(String keyWord) {
-        this.keyWord = keyWord;
-        this.posts = new ArrayList<>();
-    }
-
-    public Tag(String keyWord, Long postId ) {
         this.keyWord = keyWord;
         this.posts = new ArrayList<>();
     }
@@ -59,4 +54,12 @@ public class Tag {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Tag{" +
+                "id=" + id +
+                ", keyWord='" + keyWord + '\'' +
+                ", posts=" + posts +
+                '}';
+    }
 }

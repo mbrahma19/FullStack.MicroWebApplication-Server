@@ -41,16 +41,13 @@ public class CommentController {
 
     @PostMapping("/comments")
     public ResponseEntity<Comment> createComment(@RequestBody Comment comment) {
-
-
-
-        return new ResponseEntity<>(commentService.createComment(comment), HttpStatus.CREATED);
+    return new ResponseEntity<>(commentService.createComment(comment), HttpStatus.CREATED);
     }
 
 //Comment the Post by Post Id
 
     @PostMapping ("/commentMyPost/{id}")
-    public String createCommentonPost(@RequestBody Comment comment, @PathVariable Long id,Principal principal) {
+    public ResponseEntity<Comment> createCommentonPost(@RequestBody Comment comment, @PathVariable Long id) {
 
         Optional<Post> post = postservice.show(id);
 
@@ -58,28 +55,16 @@ public class CommentController {
 
 
         if (post.isPresent()) {
-            Optional<User> user = Optional.ofNullable(post.get().getUser());;
-
-
-            if (user.isPresent()) {
 
                 comment.setPost(post.get());
-                comment.setUser(user.get());
 
-                commentService.createComment(comment);
-
-                return "redirect:/post/" + comment.getPost().getId();
-            } else {
-                return "/error";
             }
 
-        } else {
-            return "/error";
-        }
-
-
+        return new ResponseEntity<>(commentService.createComment(comment), HttpStatus.CREATED);
 
     }
+
+
 
 
 
@@ -97,7 +82,7 @@ public class CommentController {
 
 
 
-    @GetMapping("/commentsByPostId/{id}")
+    @GetMapping("commentsByPostId//{id}")
     public ResponseEntity<List<Comment>> getAllCommentsByPost(@PathVariable Long id) {
 
         return new ResponseEntity<List<Comment>>(commentService.findCommentbyPostId(id), HttpStatus.OK);
@@ -131,45 +116,45 @@ public class CommentController {
 
 
 
-    @PostMapping("/createComment")
-    public String createNewPost(@Valid Comment comment, BindingResult bindingResult) {
+//    @PostMapping("/createComment")
+//    public String createNewPost(@Valid Comment comment, BindingResult bindingResult) {
+//
+//        if (bindingResult.hasErrors()) {
+//            return "/commentForm";
+//
+//        } else {
+//            commentService.createComment(comment);
+//            return "redirect:/post/" + comment.getPost().getId();
+//        }
+//    }
+//
+//
 
-        if (bindingResult.hasErrors()) {
-            return "/commentForm";
-
-        } else {
-            commentService.createComment(comment);
-            return "redirect:/post/" + comment.getPost().getId();
-        }
-    }
-
-
-
-    @GetMapping ("/commentPost/{id}")
-    public String commentPostWithId(@PathVariable Long id,
-                                    Principal principal,
-                                    Model model) {
-
-        Optional<Post> post = postservice.show(id);
-
-        if (post.isPresent()) {
-            Optional<User> user = userservice.findByUsername(principal.getName());
-
-            if (user.isPresent()) {
-                Comment comment = new Comment();
-                //comment.setUser(user.get());
-                comment.setPost(post.get());
-
-                model.addAttribute("comment", comment);
-
-                return "/commentForm";
-
-            } else {
-                return "/error";
-            }
-
-        } else {
-            return "/error";
-        }
-    }
+//    @GetMapping ("/commentPost/{id}")
+//    public String commentPostWithId(@PathVariable Long id,
+//                                    Principal principal,
+//                                    Model model) {
+//
+//        Optional<Post> post = postservice.show(id);
+//
+//        if (post.isPresent()) {
+//            Optional<User> user = userservice.findByUsername(principal.getName());
+//
+//            if (user.isPresent()) {
+//                Comment comment = new Comment();
+//                //comment.setUser(user.get());
+//                comment.setPost(post.get());
+//
+//                model.addAttribute("comment", comment);
+//
+//                return "/commentForm";
+//
+//            } else {
+//                return "/error";
+//            }
+//
+//        } else {
+//            return "/error";
+//        }
+//    }
 }

@@ -22,7 +22,9 @@ public class PostService {
 
     public Optional<Post> show(Long id) { return postRepo.findById(id);}
 
-    public Post create(Post post){ return postRepo.save(post); }
+    public Post create(Post post){
+        return postRepo.save(post);
+    }
 
     public Post update(Post post){
         return postRepo.save(post);
@@ -41,7 +43,7 @@ public class PostService {
         return postRepo.findByOrderByCreateDateDesc();
     }
 
-    private int subtractPageByOne(int page){
+    protected int subtractPageByOne(int page){
         return (page < 1) ? 0 : page - 1;
     }
 }
